@@ -64,7 +64,7 @@ export function KpiCard({
                 <button
                   type="button"
                   aria-label={`How is ${label} calculated?`}
-                  className="text-muted-foreground/50 hover:text-foreground transition-colors"
+                  className="relative text-muted-foreground/50 hover:text-foreground active:scale-[0.96] [transition:color_150ms_ease,transform_150ms_var(--ease-out)] before:absolute before:inset-[-13px] before:content-['']"
                 >
                   <Info className="size-3.5" />
                 </button>
@@ -72,7 +72,7 @@ export function KpiCard({
               <TooltipContent
                 side="left"
                 align="start"
-                className="max-w-xs leading-relaxed"
+                className="max-w-xs leading-relaxed text-pretty"
               >
                 {hint}
               </TooltipContent>

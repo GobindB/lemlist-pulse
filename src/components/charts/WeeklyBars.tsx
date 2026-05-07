@@ -126,7 +126,12 @@ export function WeeklyBars({
             position: "right",
           }}
         />
-        <Bar dataKey="actual" radius={[4, 4, 0, 0]}>
+        <Bar
+          dataKey="actual"
+          radius={[4, 4, 0, 0]}
+          animationDuration={400}
+          animationEasing="ease-out"
+        >
           {data.map((d, i) => (
             <Cell key={i} fill={barFill(d, target)} />
           ))}

@@ -79,16 +79,20 @@ export function PaceCard({
       <div className="space-y-2">
         <div className="relative h-2 rounded-full bg-secondary overflow-hidden">
           <div
-            className={cn(
-              "absolute inset-y-0 left-0 transition-[width] duration-500",
-              STATUS_BAR[status],
-            )}
-            style={{ width: `${actualPct}%` }}
+            className={cn("absolute inset-y-0 left-0", STATUS_BAR[status])}
+            style={{
+              width: `${actualPct}%`,
+              transition:
+                "width 300ms var(--ease-out), background-color 300ms var(--ease-out)",
+            }}
           />
           {/* Forecast marker — projected end-of-period total at current rate */}
           <div
             className="absolute inset-y-0 w-px bg-foreground/60"
-            style={{ left: `${expectedPct}%` }}
+            style={{
+              left: `${expectedPct}%`,
+              transition: "left 300ms var(--ease-out)",
+            }}
             title={`Projected end-of-period total: ${expected}`}
           />
         </div>

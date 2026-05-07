@@ -52,7 +52,7 @@ export function ProjectionCard({
             <button
               type="button"
               aria-label="How is this calculated?"
-              className="text-muted-foreground/50 hover:text-foreground transition-colors"
+              className="relative text-muted-foreground/50 hover:text-foreground active:scale-[0.96] [transition:color_150ms_ease,transform_150ms_var(--ease-out)] before:absolute before:inset-[-13px] before:content-['']"
             >
               <Info className="size-3.5" />
             </button>
@@ -60,7 +60,7 @@ export function ProjectionCard({
           <TooltipContent
             side="left"
             align="start"
-            className="max-w-xs leading-relaxed"
+            className="max-w-xs leading-relaxed text-pretty"
           >
             {basis}
           </TooltipContent>
@@ -91,13 +91,19 @@ export function ProjectionCard({
       <div className="space-y-2">
         <div className="flex h-2 rounded-full bg-secondary overflow-hidden">
           <div
-            className="bg-foreground transition-[width] duration-500"
-            style={{ width: `${bookedPct}%` }}
+            className="bg-foreground"
+            style={{
+              width: `${bookedPct}%`,
+              transition: "width 300ms var(--ease-out)",
+            }}
             title={`Booked: ${booked}`}
           />
           <div
-            className="bg-foreground/30 transition-[width] duration-500"
-            style={{ width: `${projectedPct}%` }}
+            className="bg-foreground/30"
+            style={{
+              width: `${projectedPct}%`,
+              transition: "width 300ms var(--ease-out)",
+            }}
             title={`Projected: ${projectedDelta}`}
           />
         </div>

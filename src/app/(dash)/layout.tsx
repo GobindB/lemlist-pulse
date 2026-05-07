@@ -36,7 +36,7 @@ function NavLink({
   return (
     <Link
       href={href}
-      className="rounded-md px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+      className="rounded-md px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary active:scale-[0.97] [transition:color_150ms_ease,background-color_150ms_ease,transform_150ms_var(--ease-out)]"
     >
       {children}
     </Link>

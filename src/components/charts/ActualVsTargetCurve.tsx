@@ -165,6 +165,8 @@ export function ActualVsTargetCurve({
           fill="url(#actualFill)"
           dot={{ r: 2.5, fill: color, strokeWidth: 0 }}
           activeDot={{ r: 4, fill: color }}
+          animationDuration={400}
+          animationEasing="ease-out"
         />
       </AreaChart>
     </ResponsiveContainer>

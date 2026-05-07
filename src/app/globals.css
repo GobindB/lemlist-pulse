@@ -29,6 +29,12 @@
   --success: oklch(0.72 0.18 145);
   --warning: oklch(0.78 0.16 85);
   --info: oklch(0.68 0.15 240);
+
+  /* Motion. Stronger than the built-in keywords. Use --ease-out for entering
+   * UI (bar fills, popovers, tooltips) and --ease-in-out for elements
+   * moving across the screen. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 @theme inline {

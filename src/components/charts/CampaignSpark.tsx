@@ -30,14 +30,14 @@ export function CampaignSpark({
   emptyMessage = "No campaign activity in window.",
 }: CampaignSparkProps) {
   return (
-    <div className="rounded-xl border border-border bg-card">
+    <div className="rounded-xl border border-border bg-card overflow-hidden">
       <div className="flex items-center justify-between gap-2 border-b border-border px-5 py-4">
         <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
           {title}
         </h3>
         <Link
           href="/campaigns"
-          className="text-[10px] uppercase tracking-wider font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+          className="text-[10px] uppercase tracking-wider font-medium text-muted-foreground hover:text-foreground active:scale-[0.97] [transition:color_150ms_ease,transform_150ms_var(--ease-out)] flex items-center gap-1"
         >
           View all
           <ArrowUpRight className="size-3" />
@@ -54,7 +54,7 @@ export function CampaignSpark({
               <Link
                 href={`/campaigns/${c.id}`}
                 className={cn(
-                  "flex items-center gap-4 px-5 py-3.5 hover:bg-secondary/40 transition-colors group",
+                  "flex items-center gap-4 px-5 py-3.5 hover:bg-secondary/40 active:scale-[0.99] [transition:background-color_150ms_ease,transform_150ms_var(--ease-out)] group",
                   i !== campaigns.length - 1 && "border-b border-border",
                 )}
               >

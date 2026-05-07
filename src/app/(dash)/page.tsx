@@ -78,26 +78,32 @@ export default function DashboardPage() {
           </>
         ) : (
           <>
-            <PaceCard
-              label="Today"
-              actual={stats.callsToday}
-              expected={stats.expectedToday}
-              target={TARGETS.callsPerDay}
-              status={stats.todayStatus}
-            />
-            <PaceCard
-              label="This week"
-              actual={stats.callsWeek}
-              expected={stats.expectedWeek}
-              target={TARGETS.callsPerWeek}
-              status={stats.weekStatus}
-            />
-            <ProjectionCard
-              booked={stats.meetingsBookedThisMonth}
-              projectedDelta={stats.projectedMeetingsDelta}
-              goal={TARGETS.meetingsPerMonth}
-              basis={stats.projectionBasis}
-            />
+            <Stagger index={0}>
+              <PaceCard
+                label="Today"
+                actual={stats.callsToday}
+                expected={stats.expectedToday}
+                target={TARGETS.callsPerDay}
+                status={stats.todayStatus}
+              />
+            </Stagger>
+            <Stagger index={1}>
+              <PaceCard
+                label="This week"
+                actual={stats.callsWeek}
+                expected={stats.expectedWeek}
+                target={TARGETS.callsPerWeek}
+                status={stats.weekStatus}
+              />
+            </Stagger>
+            <Stagger index={2}>
+              <ProjectionCard
+                booked={stats.meetingsBookedThisMonth}
+                projectedDelta={stats.projectedMeetingsDelta}
+                goal={TARGETS.meetingsPerMonth}
+                basis={stats.projectionBasis}
+              />
+            </Stagger>
           </>
         )}
       </section>
@@ -112,25 +118,31 @@ export default function DashboardPage() {
           </>
         ) : (
           <>
-            <KpiCard
-              label="Connect rate"
-              value={Math.round(stats.connectRateWeek * 100)}
-              unit="%"
-              hint={`${stats.callsWeek} dials, ${Math.round(stats.connectRateWeek * stats.callsWeek)} ≥ ${BENCHMARKS.connectDurationThresholdSec}s`}
-              tone={stats.connectRateWeek >= BENCHMARKS.connectRate ? "success" : "muted"}
-            />
-            <KpiCard
-              label="Talk time"
-              value={Math.round(stats.talkTimeSec / 60)}
-              unit="min"
-              hint={`${stats.talkTimeSec}s across ${stats.callsWeek} dials`}
-            />
-            <KpiCard
-              label="Emails sent"
-              value={stats.emailsSentWeek}
-              hint={`Daily target: ${TARGETS.emailsPerDay}`}
-              tone={stats.emailsSentWeek >= TARGETS.emailsPerWeek * 0.5 ? "success" : "muted"}
-            />
+            <Stagger index={3}>
+              <KpiCard
+                label="Connect rate"
+                value={Math.round(stats.connectRateWeek * 100)}
+                unit="%"
+                hint={`${stats.callsWeek} dials, ${Math.round(stats.connectRateWeek * stats.callsWeek)} ≥ ${BENCHMARKS.connectDurationThresholdSec}s`}
+                tone={stats.connectRateWeek >= BENCHMARKS.connectRate ? "success" : "muted"}
+              />
+            </Stagger>
+            <Stagger index={4}>
+              <KpiCard
+                label="Talk time"
+                value={Math.round(stats.talkTimeSec / 60)}
+                unit="min"
+                hint={`${stats.talkTimeSec}s across ${stats.callsWeek} dials`}
+              />
+            </Stagger>
+            <Stagger index={5}>
+              <KpiCard
+                label="Emails sent"
+                value={stats.emailsSentWeek}
+                hint={`Daily target: ${TARGETS.emailsPerDay}`}
+                tone={stats.emailsSentWeek >= TARGETS.emailsPerWeek * 0.5 ? "success" : "muted"}
+              />
+            </Stagger>
           </>
         )}
       </section>
@@ -198,7 +210,7 @@ function PageHeader({ daysRemaining }: { daysRemaining?: number }) {
         <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
           Sales Activity · Week of {weekOf}
         </p>
-        <h1 className="text-2xl font-medium tracking-tight mt-1">
+        <h1 className="text-2xl font-medium tracking-tight mt-1 text-balance">
           {now.toLocaleDateString("en-US", {
             weekday: "long",
             month: "long",
@@ -220,9 +232,25 @@ function CardSkel({ sm }: { sm?: boolean }) {
   return <Skeleton className={sm ? "h-32 w-full rounded-xl" : "h-44 w-full rounded-xl"} />;
 }
 
+/**
+ * Wraps a child in a staggered fade-up entrance. `index` × 70ms = delay.
+ * `fill-mode: both` keeps the element invisible during the delay window
+ * (otherwise it flashes at full opacity for one frame).
+ */
+function Stagger({ index, children }: { index: number; children: React.ReactNode }) {
+  return (
+    <div
+      className="animate-in fade-in slide-in-from-bottom-1 duration-300 fill-mode-both"
+      style={{ animationDelay: `${index * 70}ms` }}
+    >
+      {children}
+    </div>
+  );
+}
+
 function ErrorBanner({ message }: { message: string }) {
   return (
-    <div className="rounded-xl border border-destructive/40 bg-destructive/10 px-5 py-3 text-xs text-destructive">
+    <div className="rounded-xl border border-destructive/40 bg-destructive/10 px-5 py-3 text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
       <span className="font-mono uppercase tracking-wider">api error · </span>
       {message}
     </div>
