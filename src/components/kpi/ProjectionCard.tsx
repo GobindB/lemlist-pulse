@@ -7,8 +7,6 @@ interface ProjectionCardProps {
   projectedDelta: number;
   /** End-of-period stretch target for color cue. */
   goal?: number;
-  /** Days remaining in the projection window — appears as a small annotation. */
-  daysRemaining: number;
   /** Description of how the projection was computed. Tooltip-style hint. */
   basis: string;
   className?: string;
@@ -23,7 +21,6 @@ export function ProjectionCard({
   booked,
   projectedDelta,
   goal,
-  daysRemaining,
   basis,
   className,
 }: ProjectionCardProps) {
@@ -40,14 +37,9 @@ export function ProjectionCard({
         className,
       )}
     >
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
-          Month-end projection
-        </h3>
-        <span className="text-[10px] uppercase tracking-wider font-mono text-muted-foreground/70">
-          {daysRemaining}d left
-        </span>
-      </div>
+      <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
+        Month-end projection
+      </h3>
 
       <div className="flex items-baseline gap-2">
         <span className="text-4xl font-semibold tabular-nums leading-none">

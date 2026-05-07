@@ -23,7 +23,12 @@ import {
   totalDurationSec,
   countByType,
 } from "@/lib/metrics/derived";
-import { expectedAtNow, paceStatus } from "@/lib/metrics/pacing";
+import {
+  paceStatus,
+  fractionalDayElapsed,
+  fractionalWeekElapsed,
+  projectedEndpoint,
+} from "@/lib/metrics/pacing";
 import {
   projectedMeetingsFromCalls,
   workdaysRemainingInMonth,
@@ -51,7 +56,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader />
+      <PageHeader daysRemaining={stats?.workdaysRemaining} />
 
       {todayErr || weekErr ? (
         <ErrorBanner
@@ -91,7 +96,6 @@ export default function DashboardPage() {
               booked={stats.meetingsBookedThisMonth}
               projectedDelta={stats.projectedMeetingsDelta}
               goal={TARGETS.meetingsPerMonth}
-              daysRemaining={stats.workdaysRemaining}
               basis={stats.projectionBasis}
             />
           </>
@@ -196,10 +200,10 @@ export default function DashboardPage() {
   );
 }
 
-function PageHeader() {
+function PageHeader({ daysRemaining }: { daysRemaining?: number }) {
   const now = new Date();
   return (
-    <div className="flex items-end justify-between">
+    <div className="flex items-end justify-between gap-6">
       <div>
         <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
           Sales Activity
@@ -211,6 +215,17 @@ function PageHeader() {
             day: "numeric",
           })}
         </h1>
+      </div>
+      <div className="text-right">
+        <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+          {now.toLocaleDateString("en-US", { month: "long" })}
+        </p>
+        <p className="text-2xl font-medium tracking-tight mt-1 tabular-nums">
+          {daysRemaining ?? "—"}{" "}
+          <span className="text-base text-muted-foreground font-mono">
+            days left
+          </span>
+        </p>
       </div>
     </div>
   );
@@ -266,12 +281,11 @@ function computeStats(
   const callsWeek = callCount(weekActivities);
   const callsMonth = callCount(monthActivities);
 
-  const expectedToday = expectedAtNow(now, TARGETS.callsPerDay, WORKING_HOURS);
-  const workdaysSoFar = workdaysSinceMonday(localNow, WORKING_HOURS.workdays);
-  const expectedWeek =
-    workdaysSoFar > 1
-      ? TARGETS.callsPerDay * (workdaysSoFar - 1) + expectedToday
-      : expectedToday;
+  // PACE = projected end-of-period total at your current rate (not "where you should be").
+  const todayFraction = fractionalDayElapsed(now, WORKING_HOURS);
+  const weekFraction = fractionalWeekElapsed(now, WORKING_HOURS);
+  const projectedToday = projectedEndpoint(callsToday, todayFraction);
+  const projectedWeek = projectedEndpoint(callsWeek, weekFraction);
 
   // --- Projection: based on the user's actual month-to-date call rate, NOT the target.
   // We exclude today from both numerator and denominator to avoid skew from a half-day.
@@ -294,10 +308,10 @@ function computeStats(
   return {
     callsToday,
     callsWeek,
-    expectedToday,
-    expectedWeek,
-    todayStatus: paceStatus(callsToday, expectedToday),
-    weekStatus: paceStatus(callsWeek, expectedWeek),
+    expectedToday: projectedToday,
+    expectedWeek: projectedWeek,
+    todayStatus: paceStatus(projectedToday, TARGETS.callsPerDay),
+    weekStatus: paceStatus(projectedWeek, TARGETS.callsPerWeek),
     connectRateWeek: connectRate(weekActivities),
     interestedRateWeek: interestedRate(weekActivities),
     talkTimeSec: totalDurationSec(weekActivities),

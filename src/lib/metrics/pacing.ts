@@ -57,5 +57,56 @@ export function localHourFraction(now: Date, timezone: string): number {
   return local.getHours() + local.getMinutes() / 60;
 }
 
+/**
+ * Fraction of the working day elapsed in `[hours.startHour, hours.endHour]`.
+ * Before startHour → 0. After endHour → 1. Non-workdays → 0.
+ */
+export function fractionalDayElapsed(
+  now: Date,
+  hours: WorkingHoursLike,
+): number {
+  const local = toZonedTime(now, hours.timezone);
+  const isoDay = ((local.getDay() + 6) % 7) + 1;
+  if (!hours.workdays.includes(isoDay)) return 0;
+  const fractional = local.getHours() + local.getMinutes() / 60;
+  if (fractional <= hours.startHour) return 0;
+  if (fractional >= hours.endHour) return 1;
+  return (fractional - hours.startHour) / (hours.endHour - hours.startHour);
+}
+
+/**
+ * Fraction of the working week elapsed (Mon–Fri by default). Counts
+ * completed workdays since Monday, plus today's partial day.
+ */
+export function fractionalWeekElapsed(
+  now: Date,
+  hours: WorkingHoursLike,
+): number {
+  const local = toZonedTime(now, hours.timezone);
+  const isoToday = ((local.getDay() + 6) % 7) + 1;
+  const totalWorkdays = hours.workdays.length;
+  if (totalWorkdays === 0) return 0;
+  // Workdays completed BEFORE today (i.e. iso < isoToday).
+  let completed = 0;
+  for (const d of hours.workdays) if (d < isoToday) completed += 1;
+  const todayFraction = fractionalDayElapsed(now, hours);
+  return (completed + todayFraction) / totalWorkdays;
+}
+
+/**
+ * Linear-extrapolated end-of-period projection: at the current rate, how many
+ * will we end up with by the end of the period?
+ *
+ * actualSoFar = current count. fractionalElapsed = 0..1 portion of period elapsed.
+ * Returns 0 when fractionalElapsed is 0 (no data to extrapolate from).
+ */
+export function projectedEndpoint(
+  actualSoFar: number,
+  fractionalElapsed: number,
+): number {
+  if (fractionalElapsed <= 0) return 0;
+  return Math.round(actualSoFar / fractionalElapsed);
+}
+
 /** Re-exported so callers don't need date-fns-tz directly. */
 export { getTimezoneOffset };

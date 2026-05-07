@@ -96,11 +96,11 @@ export function PaceCard({
             )}
             style={{ width: `${actualPct}%` }}
           />
-          {/* Pace line marker — shows where you SHOULD be right now */}
+          {/* Forecast marker — projected end-of-period total at current rate */}
           <div
             className="absolute inset-y-0 w-px bg-foreground/60"
             style={{ left: `${expectedPct}%` }}
-            title={`Expected by now: ${expected}`}
+            title={`Projected end-of-period total: ${expected}`}
           />
         </div>
         <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-muted-foreground font-mono">

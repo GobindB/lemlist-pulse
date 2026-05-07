@@ -4,10 +4,10 @@ import { Activity, BarChart3 } from "lucide-react";
 export default function DashLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh flex flex-col">
-      <header className="border-b border-border">
-        <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between gap-6">
-          <Link href="/" className="flex items-center">
-            <span className="text-sm font-semibold uppercase tracking-[0.22em]">
+      <header className="h-14 border-b border-border flex items-center px-6 shrink-0">
+        <div className="mx-auto max-w-7xl w-full flex items-center justify-between gap-6">
+          <Link href="/">
+            <span className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
               Canary Sales
             </span>
           </Link>
