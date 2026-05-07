@@ -152,14 +152,9 @@ export default function DashboardPage() {
 
       {/* Row 3 — today's curve */}
       <section className="rounded-xl border border-border bg-card p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
-            Today · cumulative dials
-          </h3>
-          <span className="text-[10px] uppercase tracking-wider font-mono text-muted-foreground/70">
-            {WORKING_HOURS.startHour}:00 – {WORKING_HOURS.endHour}:00 PT
-          </span>
-        </div>
+        <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium mb-4">
+          Today · cumulative dials
+        </h3>
         {isLoading || !stats ? (
           <Skeleton className="h-[220px] w-full" />
         ) : (
@@ -167,6 +162,7 @@ export default function DashboardPage() {
             data={stats.todayCurve}
             goal={TARGETS.callsPerDay}
             projected={stats.expectedToday}
+            status={stats.todayStatus}
             metricLabel="Cumulative"
             nowHour={stats.nowHour}
           />
