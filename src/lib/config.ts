@@ -9,7 +9,7 @@ export const TARGETS = {
   callsPerWeek: 100,
   emailsPerDay: 80,
   emailsPerWeek: 400,
-  meetingsPerMonth: 8,
+  meetingsPerMonth: 5,
 } as const;
 
 /** Working hours used to compute "expected at now" pace lines. */
