@@ -1,4 +1,10 @@
+import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ProjectionCardProps {
   /** Meetings already booked in the current period. */
@@ -37,9 +43,29 @@ export function ProjectionCard({
         className,
       )}
     >
-      <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
-        Month-end projection
-      </h3>
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
+          Month-end projection
+        </h3>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              aria-label="How is this calculated?"
+              className="text-muted-foreground/50 hover:text-foreground transition-colors"
+            >
+              <Info className="size-3.5" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent
+            side="left"
+            align="start"
+            className="max-w-xs leading-relaxed"
+          >
+            {basis}
+          </TooltipContent>
+        </Tooltip>
+      </div>
 
       <div className="flex items-baseline gap-2">
         <span className="text-4xl font-semibold tabular-nums leading-none">
@@ -88,9 +114,6 @@ export function ProjectionCard({
         </div>
       </div>
 
-      <p className="text-xs text-muted-foreground leading-relaxed border-t border-border pt-3">
-        {basis}
-      </p>
     </div>
   );
 }

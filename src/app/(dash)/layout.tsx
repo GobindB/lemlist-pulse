@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Activity, BarChart3 } from "lucide-react";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function DashLayout({ children }: { children: React.ReactNode }) {
   return (
+    <TooltipProvider delayDuration={150}>
     <div className="min-h-dvh flex flex-col">
       <header className="h-14 border-b border-border flex items-center px-6 shrink-0">
         <div className="mx-auto max-w-7xl w-full flex items-center justify-between gap-6">
@@ -25,6 +27,7 @@ export default function DashLayout({ children }: { children: React.ReactNode }) 
         <div className="mx-auto max-w-7xl px-6 py-8">{children}</div>
       </main>
     </div>
+    </TooltipProvider>
   );
 }
 

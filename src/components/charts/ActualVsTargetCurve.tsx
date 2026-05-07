@@ -14,12 +14,15 @@ import {
 interface CurvePoint {
   hour: number; // 8..17
   actual: number;
-  expected: number;
 }
 
 interface ActualVsTargetCurveProps {
   data: CurvePoint[];
-  /** Line label for the actual series, e.g. "Calls". */
+  /** Daily goal — drawn as a horizontal dashed reference line. */
+  goal: number;
+  /** Projected end-of-day total at current rate — drawn as a fainter reference line. */
+  projected: number;
+  /** Line label for the actual series (used in tooltip). */
   metricLabel?: string;
   /** Where the day's "now" is (hour). Drawn as a vertical reference line. */
   nowHour?: number;
@@ -34,15 +37,21 @@ const fmtHour = (h: number) => {
 
 export function ActualVsTargetCurve({
   data,
+  goal,
+  projected,
   metricLabel = "Calls",
   nowHour,
   height = 220,
 }: ActualVsTargetCurveProps) {
+  // Y-axis upper bound: at least the goal, with some headroom if actuals exceed it.
+  const maxActual = data.reduce((m, p) => Math.max(m, p.actual), 0);
+  const yMax = Math.max(goal, maxActual) * 1.1;
+
   return (
     <ResponsiveContainer width="100%" height={height}>
       <LineChart
         data={data}
-        margin={{ top: 8, right: 16, bottom: 8, left: -16 }}
+        margin={{ top: 8, right: 56, bottom: 8, left: -16 }}
       >
         <CartesianGrid
           stroke="oklch(0.2 0.005 280)"
@@ -63,6 +72,7 @@ export function ActualVsTargetCurve({
           axisLine={false}
           tickLine={false}
           width={40}
+          domain={[0, yMax]}
         />
         <Tooltip
           contentStyle={{
@@ -72,9 +82,39 @@ export function ActualVsTargetCurve({
             fontSize: 12,
           }}
           labelStyle={{ color: "oklch(0.97 0.005 280)" }}
-          formatter={(v: number, name: string) => [v, name]}
+          formatter={(v: number) => [v, metricLabel]}
           labelFormatter={(h: number) => fmtHour(h)}
         />
+
+        {/* Goal line */}
+        <ReferenceLine
+          y={goal}
+          stroke="oklch(0.55 0.01 280)"
+          strokeDasharray="4 4"
+          label={{
+            value: `goal ${goal}`,
+            fill: "oklch(0.55 0.01 280)",
+            fontSize: 10,
+            position: "right",
+          }}
+        />
+
+        {/* Projection line — only render when distinct from x-axis to reduce clutter */}
+        {projected > 0 && projected < yMax ? (
+          <ReferenceLine
+            y={projected}
+            stroke="oklch(0.78 0.16 85)"
+            strokeDasharray="2 4"
+            label={{
+              value: `pace ${projected}`,
+              fill: "oklch(0.78 0.16 85)",
+              fontSize: 10,
+              position: "right",
+            }}
+          />
+        ) : null}
+
+        {/* "Now" vertical marker */}
         {nowHour !== undefined ? (
           <ReferenceLine
             x={nowHour}
@@ -88,15 +128,7 @@ export function ActualVsTargetCurve({
             }}
           />
         ) : null}
-        <Line
-          type="monotone"
-          dataKey="expected"
-          name="Pace"
-          stroke="oklch(0.55 0.01 280)"
-          strokeWidth={1.5}
-          strokeDasharray="4 4"
-          dot={false}
-        />
+
         <Line
           type="monotone"
           dataKey="actual"

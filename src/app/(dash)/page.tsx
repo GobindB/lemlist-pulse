@@ -165,6 +165,8 @@ export default function DashboardPage() {
         ) : (
           <ActualVsTargetCurve
             data={stats.todayCurve}
+            goal={TARGETS.callsPerDay}
+            projected={stats.expectedToday}
             metricLabel="Cumulative"
             nowHour={stats.nowHour}
           />
@@ -259,7 +261,7 @@ interface ComputedStats {
   projectedMeetingsDelta: number;
   projectionBasis: string;
   workdaysRemaining: number;
-  todayCurve: { hour: number; actual: number; expected: number }[];
+  todayCurve: { hour: number; actual: number }[];
   weekBars: {
     day: string;
     actual: number;
@@ -327,9 +329,7 @@ function computeStats(
 }
 
 function buildTodayCurve(activities: Activity[], localNow: Date) {
-  const points: { hour: number; actual: number; expected: number }[] = [];
-  const target = TARGETS.callsPerDay;
-  const span = WORKING_HOURS.endHour - WORKING_HOURS.startHour;
+  const points: { hour: number; actual: number }[] = [];
 
   for (let h = WORKING_HOURS.startHour; h <= WORKING_HOURS.endHour; h++) {
     const cutoff = new Date(localNow);
@@ -341,10 +341,7 @@ function buildTodayCurve(activities: Activity[], localNow: Date) {
       return t.getTime() <= cutoff.getTime();
     }).length;
 
-    const elapsed = h - WORKING_HOURS.startHour;
-    const expected = Math.round((target * elapsed) / span);
-
-    points.push({ hour: h, actual, expected });
+    points.push({ hour: h, actual });
   }
   return points;
 }
