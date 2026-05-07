@@ -5,8 +5,8 @@
 
 /** Daily and weekly activity targets. Pessimistic defaults — tune up after a week of real use. */
 export const TARGETS = {
-  callsPerDay: 30,
-  callsPerWeek: 150,
+  callsPerDay: 20,
+  callsPerWeek: 100,
   emailsPerDay: 80,
   emailsPerWeek: 400,
   meetingsPerMonth: 8,
