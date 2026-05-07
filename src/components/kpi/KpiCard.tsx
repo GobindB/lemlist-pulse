@@ -1,11 +1,17 @@
+import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface KpiCardProps {
   label: string;
   value: string | number;
   /** Suffix appended directly to the value (e.g. "%", "s", "/day"). */
   unit?: string;
-  /** Small helper text below the number. */
+  /** Explanation shown on hover via an Info icon next to the label. */
   hint?: string;
   /** Status hue for the value. */
   tone?: "default" | "success" | "warning" | "destructive" | "muted";
@@ -42,15 +48,37 @@ export function KpiCard({
         className,
       )}
     >
-      <div className="flex items-start justify-between gap-2">
+      <div className="flex items-center justify-between gap-2">
         <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
           {label}
         </h3>
-        {meta ? (
-          <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70 font-mono">
-            {meta}
-          </span>
-        ) : null}
+        <div className="flex items-center gap-2">
+          {meta ? (
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70 font-mono">
+              {meta}
+            </span>
+          ) : null}
+          {hint ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  aria-label={`How is ${label} calculated?`}
+                  className="text-muted-foreground/50 hover:text-foreground transition-colors"
+                >
+                  <Info className="size-3.5" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent
+                side="left"
+                align="start"
+                className="max-w-xs leading-relaxed"
+              >
+                {hint}
+              </TooltipContent>
+            </Tooltip>
+          ) : null}
+        </div>
       </div>
       <div className="flex items-baseline gap-1.5">
         <span
@@ -67,9 +95,6 @@ export function KpiCard({
           </span>
         ) : null}
       </div>
-      {hint ? (
-        <p className="text-xs text-muted-foreground leading-relaxed">{hint}</p>
-      ) : null}
     </div>
   );
 }
