@@ -103,10 +103,9 @@ export default function DashboardPage() {
       </section>
 
       {/* Row 2 — outcome KPIs */}
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {isLoading || !stats ? (
           <>
-            <CardSkel sm />
             <CardSkel sm />
             <CardSkel sm />
             <CardSkel sm />
@@ -120,17 +119,6 @@ export default function DashboardPage() {
               meta="week · heuristic"
               hint={`${stats.callsWeek} dials, ${Math.round(stats.connectRateWeek * stats.callsWeek)} ≥ ${BENCHMARKS.connectDurationThresholdSec}s`}
               tone={stats.connectRateWeek >= BENCHMARKS.connectRate ? "success" : "muted"}
-            />
-            <KpiCard
-              label="Qualified"
-              value={countByType(week?.activities ?? [], ["aircallInterested"])}
-              meta="week · marked"
-              hint="Calls you flagged as Interested in lemlist"
-              tone={
-                countByType(week?.activities ?? [], ["aircallInterested"]) > 0
-                  ? "success"
-                  : "muted"
-              }
             />
             <KpiCard
               label="Talk time"
