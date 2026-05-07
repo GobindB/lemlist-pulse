@@ -182,11 +182,21 @@ export default function DashboardPage() {
 function PageHeader({ daysRemaining }: { daysRemaining?: number }) {
   const now = new Date();
   const monthName = now.toLocaleDateString("en-US", { month: "long" });
+  // Monday of the current week (matches our route handler's week-start convention).
+  const monday = new Date(now);
+  const dayOfWeek = monday.getDay(); // 0 = Sunday, 1 = Monday, ...
+  const offsetToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  monday.setDate(monday.getDate() + offsetToMonday);
+  const weekOf = monday.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+
   return (
     <div className="flex items-end justify-between gap-6">
       <div>
         <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-          Sales Activity
+          Sales Activity · Week of {weekOf}
         </p>
         <h1 className="text-2xl font-medium tracking-tight mt-1">
           {now.toLocaleDateString("en-US", {
