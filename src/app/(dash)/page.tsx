@@ -116,7 +116,6 @@ export default function DashboardPage() {
               label="Connect rate"
               value={Math.round(stats.connectRateWeek * 100)}
               unit="%"
-              meta="week · heuristic"
               hint={`${stats.callsWeek} dials, ${Math.round(stats.connectRateWeek * stats.callsWeek)} ≥ ${BENCHMARKS.connectDurationThresholdSec}s`}
               tone={stats.connectRateWeek >= BENCHMARKS.connectRate ? "success" : "muted"}
             />
@@ -124,13 +123,11 @@ export default function DashboardPage() {
               label="Talk time"
               value={Math.round(stats.talkTimeSec / 60)}
               unit="min"
-              meta="week"
               hint={`${stats.talkTimeSec}s across ${stats.callsWeek} dials`}
             />
             <KpiCard
               label="Emails sent"
               value={stats.emailsSentWeek}
-              meta="week"
               hint={`Daily target: ${TARGETS.emailsPerDay}`}
               tone={stats.emailsSentWeek >= TARGETS.emailsPerWeek * 0.5 ? "success" : "muted"}
             />
