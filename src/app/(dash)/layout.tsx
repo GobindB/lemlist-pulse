@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Activity, BarChart3 } from "lucide-react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function DashLayout({ children }: { children: React.ReactNode }) {
@@ -14,12 +13,8 @@ export default function DashLayout({ children }: { children: React.ReactNode }) 
             </span>
           </Link>
           <nav className="flex items-center gap-1">
-            <NavLink href="/" icon={<Activity className="size-3.5" />}>
-              Dashboard
-            </NavLink>
-            <NavLink href="/campaigns" icon={<BarChart3 className="size-3.5" />}>
-              Campaigns
-            </NavLink>
+            <NavLink href="/">Dashboard</NavLink>
+            <NavLink href="/campaigns">Campaigns</NavLink>
           </nav>
         </div>
       </header>
@@ -33,19 +28,16 @@ export default function DashLayout({ children }: { children: React.ReactNode }) 
 
 function NavLink({
   href,
-  icon,
   children,
 }: {
   href: string;
-  icon: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <Link
       href={href}
-      className="flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+      className="rounded-md px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
     >
-      {icon}
       {children}
     </Link>
   );
