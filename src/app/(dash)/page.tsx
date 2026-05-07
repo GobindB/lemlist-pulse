@@ -184,6 +184,7 @@ export default function DashboardPage() {
 
 function PageHeader({ daysRemaining }: { daysRemaining?: number }) {
   const now = new Date();
+  const monthName = now.toLocaleDateString("en-US", { month: "long" });
   return (
     <div className="flex items-end justify-between gap-6">
       <div>
@@ -198,17 +199,12 @@ function PageHeader({ daysRemaining }: { daysRemaining?: number }) {
           })}
         </h1>
       </div>
-      <div className="text-right">
-        <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-          {now.toLocaleDateString("en-US", { month: "long" })}
-        </p>
-        <p className="text-2xl font-medium tracking-tight mt-1 tabular-nums">
-          {daysRemaining ?? "—"}{" "}
-          <span className="text-base text-muted-foreground font-mono">
-            days left
-          </span>
-        </p>
-      </div>
+      <p className="text-sm text-muted-foreground tabular-nums">
+        <span className="text-foreground text-2xl font-medium tracking-tight">
+          {daysRemaining ?? "—"}
+        </span>{" "}
+        days left in {monthName}
+      </p>
     </div>
   );
 }
