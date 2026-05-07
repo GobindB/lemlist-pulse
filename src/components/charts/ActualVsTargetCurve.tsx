@@ -33,9 +33,9 @@ interface ActualVsTargetCurveProps {
 }
 
 const STATUS_COLOR: Record<PaceStatus, string> = {
-  behind: "oklch(0.63 0.22 25)", // destructive
-  "on-track": "oklch(0.68 0.15 240)", // info
-  ahead: "oklch(0.72 0.18 145)", // success
+  behind: "var(--destructive)",
+  "on-track": "var(--info)",
+  ahead: "var(--success)",
 };
 
 const fmtHourTick = (h: number) => {
@@ -84,20 +84,20 @@ export function ActualVsTargetCurve({
           </linearGradient>
         </defs>
         <CartesianGrid
-          stroke="oklch(0.2 0.005 280)"
+          stroke="var(--border)"
           strokeDasharray="2 4"
           vertical={false}
         />
         <XAxis
           dataKey="hour"
           tickFormatter={fmtHourTick}
-          stroke="oklch(0.5 0.01 280)"
+          stroke="var(--muted-foreground)"
           tick={{ fontSize: 10, fontFamily: "var(--font-mono)" }}
           axisLine={false}
           tickLine={false}
         />
         <YAxis
-          stroke="oklch(0.5 0.01 280)"
+          stroke="var(--muted-foreground)"
           tick={{ fontSize: 10, fontFamily: "var(--font-mono)" }}
           axisLine={false}
           tickLine={false}
@@ -108,20 +108,20 @@ export function ActualVsTargetCurve({
         />
         <Tooltip
           contentStyle={{
-            background: "oklch(0.13 0.005 280)",
-            border: "1px solid oklch(0.18 0.005 280)",
+            background: "var(--card)",
+            border: "1px solid var(--border)",
             borderRadius: 8,
             fontSize: 12,
             padding: "6px 10px",
           }}
           labelStyle={{
-            color: "oklch(0.55 0.01 280)",
+            color: "var(--muted-foreground)",
             fontSize: 10,
             textTransform: "uppercase",
             letterSpacing: "0.05em",
             marginBottom: 2,
           }}
-          itemStyle={{ color: "oklch(0.97 0.005 280)", padding: 0 }}
+          itemStyle={{ color: "var(--foreground)", padding: 0 }}
           separator=" "
           formatter={(v: number) => [`${v} ${v === 1 ? "call" : "calls"}`, ""]}
           labelFormatter={(h: number) => fmtHourLabel(h)}
@@ -130,11 +130,11 @@ export function ActualVsTargetCurve({
         {/* Goal reference (neutral) */}
         <ReferenceLine
           y={goal}
-          stroke="oklch(0.55 0.01 280)"
+          stroke="var(--muted-foreground)"
           strokeDasharray="4 4"
           label={{
             value: `goal ${goal}`,
-            fill: "oklch(0.55 0.01 280)",
+            fill: "var(--muted-foreground)",
             fontSize: 10,
             position: "right",
           }}
@@ -144,11 +144,11 @@ export function ActualVsTargetCurve({
         {nowHour !== undefined ? (
           <ReferenceLine
             x={nowHour}
-            stroke="oklch(0.55 0.01 280)"
+            stroke="var(--muted-foreground)"
             strokeDasharray="3 3"
             label={{
               value: "now",
-              fill: "oklch(0.55 0.01 280)",
+              fill: "var(--muted-foreground)",
               fontSize: 10,
               position: "top",
             }}

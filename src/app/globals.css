@@ -18,7 +18,8 @@
   --muted-foreground: oklch(0.55 0.01 280);
   --accent: oklch(0.18 0.005 280);
   --accent-foreground: oklch(0.97 0.005 280);
-  --destructive: oklch(0.63 0.22 25);
+  /* #FF4736 — converted to OKLCH for theme consistency */
+  --destructive: oklch(0.659 0.234 27.8);
   --destructive-foreground: oklch(0.97 0.005 280);
   --border: oklch(0.18 0.005 280);
   --input: oklch(0.18 0.005 280);

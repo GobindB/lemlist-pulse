@@ -34,10 +34,12 @@ interface WeeklyBarsProps {
 }
 
 // Status colors mirror the cumulative-dials chart.
-const COLOR_HIT = "oklch(0.72 0.18 145 / 0.85)"; // success
-const COLOR_MISS = "oklch(0.63 0.22 25 / 0.8)"; // destructive
-const COLOR_TODAY_PARTIAL = "oklch(0.68 0.15 240 / 0.8)"; // info (in progress)
-const COLOR_FUTURE = "oklch(0.18 0.005 280)"; // muted (hasn't happened)
+// Bars are flat-fill; soft alpha applied via color-mix so we still flow
+// through the canonical CSS tokens instead of hardcoding shifted values.
+const COLOR_HIT = "color-mix(in oklch, var(--success) 85%, transparent)";
+const COLOR_MISS = "color-mix(in oklch, var(--destructive) 80%, transparent)";
+const COLOR_TODAY_PARTIAL = "color-mix(in oklch, var(--info) 80%, transparent)";
+const COLOR_FUTURE = "var(--secondary)";
 
 function barFill(d: BarDatum, target: number): string {
   if (d.isFuture) return COLOR_FUTURE;
@@ -67,19 +69,19 @@ export function WeeklyBars({
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={data} margin={{ top: 8, right: 56, bottom: 8, left: -16 }}>
         <CartesianGrid
-          stroke="oklch(0.2 0.005 280)"
+          stroke="var(--border)"
           strokeDasharray="2 4"
           vertical={false}
         />
         <XAxis
           dataKey="day"
-          stroke="oklch(0.5 0.01 280)"
+          stroke="var(--muted-foreground)"
           tick={{ fontSize: 10, fontFamily: "var(--font-mono)" }}
           axisLine={false}
           tickLine={false}
         />
         <YAxis
-          stroke="oklch(0.5 0.01 280)"
+          stroke="var(--muted-foreground)"
           tick={{ fontSize: 10, fontFamily: "var(--font-mono)" }}
           axisLine={false}
           tickLine={false}
@@ -90,21 +92,21 @@ export function WeeklyBars({
         />
         <Tooltip
           contentStyle={{
-            background: "oklch(0.13 0.005 280)",
-            border: "1px solid oklch(0.18 0.005 280)",
+            background: "var(--card)",
+            border: "1px solid var(--border)",
             borderRadius: 8,
             fontSize: 12,
             padding: "6px 10px",
           }}
           labelStyle={{
-            color: "oklch(0.55 0.01 280)",
+            color: "var(--muted-foreground)",
             fontSize: 10,
             textTransform: "uppercase",
             letterSpacing: "0.05em",
             marginBottom: 2,
           }}
-          itemStyle={{ color: "oklch(0.97 0.005 280)", padding: 0 }}
-          cursor={{ fill: "oklch(0.18 0.005 280 / 0.4)" }}
+          itemStyle={{ color: "var(--foreground)", padding: 0 }}
+          cursor={{ fill: "color-mix(in oklch, var(--secondary) 40%, transparent)" }}
           separator=" "
           formatter={(v: number) => [`${v} ${v === 1 ? "call" : "calls"}`, ""]}
           labelFormatter={(_, payload) => {
@@ -115,11 +117,11 @@ export function WeeklyBars({
         />
         <ReferenceLine
           y={target}
-          stroke="oklch(0.55 0.01 280)"
+          stroke="var(--muted-foreground)"
           strokeDasharray="4 4"
           label={{
             value: `goal ${target}`,
-            fill: "oklch(0.55 0.01 280)",
+            fill: "var(--muted-foreground)",
             fontSize: 10,
             position: "right",
           }}
