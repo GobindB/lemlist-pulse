@@ -94,13 +94,23 @@ export function WeeklyBars({
             border: "1px solid oklch(0.18 0.005 280)",
             borderRadius: 8,
             fontSize: 12,
+            padding: "6px 10px",
           }}
-          labelStyle={{ color: "oklch(0.97 0.005 280)" }}
+          labelStyle={{
+            color: "oklch(0.55 0.01 280)",
+            fontSize: 10,
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            marginBottom: 2,
+          }}
+          itemStyle={{ color: "oklch(0.97 0.005 280)", padding: 0 }}
           cursor={{ fill: "oklch(0.18 0.005 280 / 0.4)" }}
-          formatter={(v: number) => [v, metricLabel]}
+          separator=" "
+          formatter={(v: number) => [`${v} ${v === 1 ? "call" : "calls"}`, ""]}
           labelFormatter={(_, payload) => {
             const p = payload?.[0]?.payload as BarDatum | undefined;
-            return p?.date ? `${p.day} · ${p.date}` : (p?.day ?? "");
+            if (!p) return "";
+            return p.date ? `${p.day}, ${p.date}` : p.day;
           }}
         />
         <ReferenceLine

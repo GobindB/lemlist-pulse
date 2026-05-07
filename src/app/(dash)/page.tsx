@@ -367,7 +367,7 @@ function labelDate(localNow: Date, isoDay: number, todayIso: number): string {
   const offset = isoDay - todayIso;
   const d = new Date(localNow);
   d.setDate(d.getDate() + offset);
-  return d.toLocaleDateString("en-US", { month: "numeric", day: "numeric" });
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 function workdaysSinceMonday(localNow: Date, workdays: readonly number[]): number {

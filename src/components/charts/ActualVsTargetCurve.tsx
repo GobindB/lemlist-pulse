@@ -1,9 +1,8 @@
 "use client";
 
 import {
-  ComposedChart,
+  AreaChart,
   Area,
-  Line,
   XAxis,
   YAxis,
   ResponsiveContainer,
@@ -39,10 +38,16 @@ const STATUS_COLOR: Record<PaceStatus, string> = {
   ahead: "oklch(0.72 0.18 145)", // success
 };
 
-const fmtHour = (h: number) => {
+const fmtHourTick = (h: number) => {
   const ampm = h >= 12 ? "p" : "a";
   const display = h > 12 ? h - 12 : h;
   return `${display}${ampm}`;
+};
+
+const fmtHourLabel = (h: number) => {
+  const ampm = h >= 12 ? "PM" : "AM";
+  const display = h > 12 ? h - 12 : h;
+  return `${display}:00 ${ampm}`;
 };
 
 export function ActualVsTargetCurve({
@@ -68,7 +73,7 @@ export function ActualVsTargetCurve({
 
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <ComposedChart
+      <AreaChart
         data={data}
         margin={{ top: 8, right: 56, bottom: 8, left: -16 }}
       >
@@ -85,7 +90,7 @@ export function ActualVsTargetCurve({
         />
         <XAxis
           dataKey="hour"
-          tickFormatter={fmtHour}
+          tickFormatter={fmtHourTick}
           stroke="oklch(0.5 0.01 280)"
           tick={{ fontSize: 10, fontFamily: "var(--font-mono)" }}
           axisLine={false}
@@ -107,10 +112,19 @@ export function ActualVsTargetCurve({
             border: "1px solid oklch(0.18 0.005 280)",
             borderRadius: 8,
             fontSize: 12,
+            padding: "6px 10px",
           }}
-          labelStyle={{ color: "oklch(0.97 0.005 280)" }}
-          formatter={(v: number) => [v, metricLabel]}
-          labelFormatter={(h: number) => fmtHour(h)}
+          labelStyle={{
+            color: "oklch(0.55 0.01 280)",
+            fontSize: 10,
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            marginBottom: 2,
+          }}
+          itemStyle={{ color: "oklch(0.97 0.005 280)", padding: 0 }}
+          separator=" "
+          formatter={(v: number) => [`${v} ${v === 1 ? "call" : "calls"}`, ""]}
+          labelFormatter={(h: number) => fmtHourLabel(h)}
         />
 
         {/* Goal reference (neutral) */}
@@ -141,26 +155,18 @@ export function ActualVsTargetCurve({
           />
         ) : null}
 
-        {/* Status-colored area fill underneath */}
+        {/* Single Area with stroke + fill + dots — keeps tooltip to one entry. */}
         <Area
-          type="monotone"
-          dataKey="actual"
-          stroke="none"
-          fill="url(#actualFill)"
-          isAnimationActive
-        />
-
-        {/* Status-colored line on top */}
-        <Line
           type="monotone"
           dataKey="actual"
           name={metricLabel}
           stroke={color}
           strokeWidth={2.5}
+          fill="url(#actualFill)"
           dot={{ r: 2.5, fill: color, strokeWidth: 0 }}
           activeDot={{ r: 4, fill: color }}
         />
-      </ComposedChart>
+      </AreaChart>
     </ResponsiveContainer>
   );
 }
