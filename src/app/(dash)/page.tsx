@@ -150,40 +150,36 @@ export default function DashboardPage() {
         )}
       </section>
 
-      {/* Row 3 — today's curve */}
-      <section className="rounded-xl border border-border bg-card p-5">
-        <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium mb-4">
-          Today · cumulative dials
-        </h3>
-        {isLoading || !stats ? (
-          <Skeleton className="h-[220px] w-full" />
-        ) : (
-          <ActualVsTargetCurve
-            data={stats.todayCurve}
-            goal={TARGETS.callsPerDay}
-            projected={stats.expectedToday}
-            status={stats.todayStatus}
-            metricLabel="Cumulative"
-            nowHour={stats.nowHour}
-          />
-        )}
-      </section>
+      {/* Row 3 — today's curve + this week's daily bars (50/50) */}
+      <section className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-xl border border-border bg-card p-5">
+          <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium mb-4">
+            Today · cumulative dials
+          </h3>
+          {isLoading || !stats ? (
+            <Skeleton className="h-[220px] w-full" />
+          ) : (
+            <ActualVsTargetCurve
+              data={stats.todayCurve}
+              goal={TARGETS.callsPerDay}
+              projected={stats.expectedToday}
+              status={stats.todayStatus}
+              metricLabel="Cumulative"
+              nowHour={stats.nowHour}
+            />
+          )}
+        </div>
 
-      {/* Row 4 — weekly bars */}
-      <section className="rounded-xl border border-border bg-card p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
+        <div className="rounded-xl border border-border bg-card p-5">
+          <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium mb-4">
             This week · daily dials
           </h3>
-          <span className="text-[10px] uppercase tracking-wider font-mono text-muted-foreground/70">
-            mon–fri
-          </span>
+          {isLoading || !stats ? (
+            <Skeleton className="h-[220px] w-full" />
+          ) : (
+            <WeeklyBars data={stats.weekBars} target={TARGETS.callsPerDay} />
+          )}
         </div>
-        {isLoading || !stats ? (
-          <Skeleton className="h-[220px] w-full" />
-        ) : (
-          <WeeklyBars data={stats.weekBars} target={TARGETS.callsPerDay} />
-        )}
       </section>
 
       {/* Row 5 — top campaigns */}
@@ -262,6 +258,7 @@ interface ComputedStats {
     day: string;
     actual: number;
     isToday?: boolean;
+    isFuture?: boolean;
     date?: string;
   }[];
   nowHour: number;
@@ -354,12 +351,16 @@ function buildWeekBars(activities: Activity[], localNow: Date) {
     if (isoDay >= 1 && isoDay <= 5) dayCounts[isoDay - 1] += 1;
   }
 
-  return labels.map((day, i) => ({
-    day,
-    actual: dayCounts[i],
-    isToday: i + 1 === todayIso,
-    date: labelDate(localNow, i + 1, todayIso),
-  }));
+  return labels.map((day, i) => {
+    const isoDay = i + 1;
+    return {
+      day,
+      actual: dayCounts[i],
+      isToday: isoDay === todayIso,
+      isFuture: isoDay > todayIso,
+      date: labelDate(localNow, isoDay, todayIso),
+    };
+  });
 }
 
 function labelDate(localNow: Date, isoDay: number, todayIso: number): string {
