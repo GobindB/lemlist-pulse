@@ -17,22 +17,16 @@ interface PaceCardProps {
   className?: string;
 }
 
-const STATUS_LABEL: Record<PaceStatus, string> = {
-  ahead: "Ahead",
-  "on-track": "On track",
-  behind: "Behind",
-};
-
-const STATUS_TEXT: Record<PaceStatus, string> = {
-  ahead: "text-[color:var(--success)]",
-  "on-track": "text-[color:var(--info)]",
-  behind: "text-destructive",
-};
-
 const STATUS_BAR: Record<PaceStatus, string> = {
   ahead: "bg-[color:var(--success)]",
   "on-track": "bg-[color:var(--info)]",
   behind: "bg-destructive",
+};
+
+const ACTUAL_COLOR: Record<PaceStatus, string> = {
+  ahead: "text-[color:var(--success)]",
+  "on-track": "text-foreground",
+  behind: "text-destructive",
 };
 
 /**
@@ -61,22 +55,17 @@ export function PaceCard({
         className,
       )}
     >
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
-          {label}
-        </h3>
-        <span
-          className={cn(
-            "text-[11px] uppercase tracking-wider font-medium",
-            STATUS_TEXT[status],
-          )}
-        >
-          {STATUS_LABEL[status]}
-        </span>
-      </div>
+      <h3 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
+        {label}
+      </h3>
 
       <div className="flex items-baseline gap-2">
-        <span className="text-4xl font-semibold tabular-nums leading-none">
+        <span
+          className={cn(
+            "text-4xl font-semibold tabular-nums leading-none",
+            ACTUAL_COLOR[status],
+          )}
+        >
           {actual}
         </span>
         <span className="text-base text-muted-foreground font-mono tabular-nums">
